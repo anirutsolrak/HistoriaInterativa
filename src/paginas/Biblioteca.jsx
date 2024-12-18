@@ -1,40 +1,114 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Button,
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  TextField,
-  InputAdornment,
-  Grid2,
-  Alert,
-} from '@mui/material';
+import React, { useState, useEffect  } from 'react';
+import { Grid2, Card, CardContent, Typography, Button, Box, CardMedia, Avatar, Alert, TextField, InputAdornment,  styled } from '@mui/material';
+import { SearchIcon, theme } from '../TemaEstilizado';
+import CardFlip from 'react-card-flip';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebaseConfig';
+import { handleGenericError } from '../TratativasErro/errorHandling';
 import { historias } from '../historias';
-import { MenuBookIcon, SearchIcon, theme } from '../TemaEstilizado';
-import {
-  handleAuthError,
-  handleGenericError,
-} from '../TratativasErro/errorHandling';
+
+const HistoriaCard = ({ historia, progresso, navigate }) => {
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  const handleCardClick = () => {
+    setIsFlipped(!isFlipped);
+  };
+
+  const handleNavigation = () => {
+    navigate(`/historia/${historia.id}`);
+  };
+
+  const CardContainer = styled(Card)(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.primary,
+    minHeight: 300,
+    maxWidth: 350,
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    cursor: 'pointer',
+  }));
+
+  return (
+    <Grid2 item xs={12} sm={6} md={4}>
+      <CardFlip isFlipped={isFlipped} flipDirection="horizontal" flipSpeedBackToFront={0.6} flipSpeedFrontToBack={0.6}>
+        <CardContainer onClick={handleCardClick}>
+          <CardMedia
+            component="img"
+            height="140"
+            image={historia.imagemCapa || 'https://via.placeholder.com/150'}
+            alt={historia.titulo}
+          />
+          <CardContent>
+            <Typography variant="h5" component="div">
+              {historia.titulo}
+            </Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+              {historia.generos?.map((genero) => (
+                <Typography
+                  variant="body2"
+                  key={genero}
+                  sx={{
+                    backgroundColor: theme.palette.secondary.main,
+                    color: 'white',
+                    padding: 0.5,
+                    borderRadius: 5,
+                  }}
+                >
+                  {genero}
+                </Typography>
+              ))}
+              {historia.conquistas?.map((conquista, index) => (
+                <Avatar
+                  key={index}
+                  sx={{
+                    backgroundColor: theme.palette.secondary.main,
+                    width: 20,
+                    height: 20,
+                    marginLeft: 1,
+                  }}
+                >
+                  <EmojiEventsIcon sx={{ fontSize: 16 }} />
+                </Avatar>
+              ))}
+            </Box>
+          </CardContent>
+        </CardContainer>
+        <CardContainer onClick={handleCardClick}> {/* Adicionei onClick aqui */}
+          <CardContent>
+            <Typography variant="h6" component="div">
+              Sinopse:
+            </Typography>
+            <Typography variant="body1" sx={{ marginTop: 1 }}>
+              {historia.descricao}
+            </Typography>
+            <Box sx={{ marginTop: 2 }}>
+              <Button variant="contained" color="secondary" fullWidth onClick={handleNavigation}>
+                {progresso[historia.id] ? 'Continuar' : 'Começar'}
+              </Button>
+            </Box>
+          </CardContent>
+        </CardContainer>
+      </CardFlip>
+    </Grid2>
+  );
+};
 
 const Biblioteca = () => {
   const navigate = useNavigate();
   const [progresso, setProgresso] = useState({});
   const [bookmarks, setBookmarks] = useState({});
   const [textoBusca, setTextoBusca] = useState('');
-  const [historiasFiltradas, setHistoriasFiltradas] = useState([]); // Inicializa como array vazio
-  const [error, setError] = useState(null); // Estado para mensagens de erro
-  const [loading, setLoading] = useState(true); // Estado para indicar carregamento
+  const [historiasFiltradas, setHistoriasFiltradas] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchHistorias = async () => {
       try {
-        // Simula uma chamada assíncrona para buscar histórias.
-        // Substitua isso pela sua lógica real de fetch.
-        await new Promise((resolve) => setTimeout(resolve, 500)); // Simula um delay
-        const fetchedHistorias = historias; // Substitua por sua chamada API
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        const fetchedHistorias = historias;
         setHistoriasFiltradas(fetchedHistorias);
       } catch (error) {
         setError(handleGenericError(error, setError));
@@ -43,10 +117,8 @@ const Biblioteca = () => {
       }
     };
 
-    const progressoStorage =
-      JSON.parse(localStorage.getItem('progresso')) || {};
-    const bookmarksStorage =
-      JSON.parse(localStorage.getItem('bookmarks')) || {};
+    const progressoStorage = JSON.parse(localStorage.getItem('progresso')) || {};
+    const bookmarksStorage = JSON.parse(localStorage.getItem('bookmarks')) || {};
 
     setProgresso(progressoStorage);
     setBookmarks(bookmarksStorage);
@@ -61,8 +133,7 @@ const Biblioteca = () => {
       }
     });
 
-    fetchHistorias(); // Chama a função para buscar histórias
-
+    fetchHistorias();
     return () => unsubscribeAuth();
   }, [navigate]);
 
@@ -79,8 +150,9 @@ const Biblioteca = () => {
     filtrarHistorias();
   }, [textoBusca]);
 
+
   const salvarProgresso = (historiaId, novoProgresso, novoBookmark) => {
-    // ... (Lógica de salvar progresso - sem alterações)
+      //Sua lógica de salvar progresso aqui
   };
 
   return (
@@ -90,12 +162,11 @@ const Biblioteca = () => {
         flexDirection: 'column',
         alignItems: 'center',
         marginTop: '10vh',
-        width: '100%', // Permite que o conteúdo ocupe toda a largura
+        width: '100%',
       }}
     >
-      {error && error} {/* Mostra a mensagem de erro */}
-      {loading && <Alert severity="info">Carregando...</Alert>}{' '}
-      {/* Mostra mensagem de carregamento */}
+      {error && error}
+      {loading && <Alert severity="info">Carregando...</Alert>}
       <TextField
         label="Buscar Histórias"
         variant="outlined"
@@ -109,7 +180,9 @@ const Biblioteca = () => {
           label: { color: theme.palette.secondary.main },
           '& .MuiOutlinedInput-root': {
             '& fieldset': { borderColor: theme.palette.secondary.main },
-            '&:hover fieldset': { borderColor: theme.palette.secondary.light },
+            '&:hover fieldset': {
+              borderColor: theme.palette.secondary.light,
+            },
             '&.Mui-focused fieldset': {
               borderColor: theme.palette.secondary.main,
             },
@@ -125,31 +198,12 @@ const Biblioteca = () => {
       />
       <Grid2 container spacing={2}>
         {historiasFiltradas.map((historia) => (
-          <Grid2 sizw={{ xs: 12, sm: 6, md: 4 }} key={historia.id}>
-            <Card
-              sx={{
-                backgroundColor: theme.palette.background.paper,
-                color: '#FFFFFF',
-                padding: 2,
-              }}
-            >
-              <CardContent>
-                <Typography variant="h5" component="div">
-                  {historia.titulo}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {historia.descricao}
-                </Typography>
-                <Button
-                  startIcon={<MenuBookIcon />}
-                  size="small"
-                  onClick={() => navigate(`/historia/${historia.id}`)}
-                >
-                  Ler História
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid2>
+          <HistoriaCard
+            key={historia.id}
+            historia={historia}
+            progresso={progresso}
+            navigate={navigate}
+          />
         ))}
       </Grid2>
     </Box>

@@ -16,6 +16,8 @@ import {
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { PersonAdd } from '@mui/icons-material';
+import { theme } from '../TemaEstilizado'; 
+import loginBackGroundImage from '../assets/loginBackGroundImage.jpg';
 import {
   handleAuthError,
   handleGenericError,
@@ -73,6 +75,9 @@ const Registrar = () => {
         alignItems: 'center',
         height: '100vh',
         width: '100vw',
+        backgroundImage: `url(${loginBackGroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
       }}
     >
       <Box
@@ -80,16 +85,18 @@ const Registrar = () => {
           display: 'flex',
           flexDirection: 'column',
           gap: 2,
-          width: { xs: '100%' },
+          width: { xs: '100%', sm: 'auto' },
           maxWidth: 400,
           p: 3,
-          boxShadow: 3,
+          backgroundColor: 'rgba(0, 0, 0, 0.9)',
+          color: '#FFFFFF',
+          boxShadow: '0px 2px 4px rgba(255, 255, 255, 1)',
           borderRadius: 1,
-          maxHeight: '80vh', // Adiciona altura máxima para permitir scroll
-          overflowY: 'auto', // Permite scroll vertical se necessário
+          maxHeight: '80vh',
+          overflowY: 'auto',
         }}
       >
-        <Typography variant="h4" component="h1" mb={2}>
+        <Typography variant="h4" component="h1" mb={2} sx={{textAlign: 'center'}}>
           Criar Conta
         </Typography>
 
@@ -112,11 +119,19 @@ const Registrar = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              autoComplete="username"
+              autoComplete="off"
               required
               fullWidth
+              margin="normal"
               error={!!emailError}
               helperText={emailError}
+              sx={{
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'white',
+                },
+                input: { color: 'white' },
+                label: { color: 'white' },
+              }}
             />
             <TextField
               label="Senha"
@@ -128,7 +143,7 @@ const Registrar = () => {
               fullWidth
               error={!!senhaError}
               helperText={senhaError}
-              InputProps={{
+              slotProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
@@ -136,11 +151,19 @@ const Registrar = () => {
                       onClick={handleClickShowPassword}
                       onMouseDown={(e) => e.preventDefault()}
                       edge="end"
+                      sx={{ color: 'white' }}
                     >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
                 ),
+              }}
+               sx={{
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'white',
+                },
+                input: { color: 'white' },
+                label: { color: 'white' },
               }}
             />
             <TextField
@@ -153,7 +176,7 @@ const Registrar = () => {
               fullWidth
               error={!!confirmarSenhaError}
               helperText={confirmarSenhaError}
-              InputProps={{
+              slotProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
@@ -161,6 +184,7 @@ const Registrar = () => {
                       onClick={handleClickShowConfirmarPassword}
                       onMouseDown={(e) => e.preventDefault()}
                       edge="end"
+                       sx={{ color: 'white' }}
                     >
                       {showConfirmarPassword ? (
                         <VisibilityOff />
@@ -171,20 +195,27 @@ const Registrar = () => {
                   </InputAdornment>
                 ),
               }}
+              sx={{
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'white',
+                },
+                input: { color: 'white' },
+                label: { color: 'white' },
+              }}
             />
             <Button
               type="submit"
               variant="contained"
               fullWidth
-              sx={{ mt: 2 }}
+              sx={{ mt: 2, color: 'white'}}
               startIcon={<PersonAdd />}
             >
               Criar Conta
             </Button>
           </Stack>
         </form>
-        <Typography variant="body2" mt={2}>
-          Já tem uma conta? <Link to="/">Faça login aqui</Link>
+        <Typography variant="body2" mt={2} sx={{textAlign: 'center'}}>
+          Já tem uma conta? <Link to="/" style={{ color: theme.palette.primary.main, textDecoration: 'underline'  }}>Faça login aqui</Link>
         </Typography>
       </Box>
     </Box>

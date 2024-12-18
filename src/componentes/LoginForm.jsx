@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { theme } from '../TemaEstilizado';
 import {
   TextField,
   Button,
@@ -13,9 +14,14 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate, Link } from 'react-router-dom';
-import 
+import loginBackGroundImage from '../assets/loginBackGroundImage.jpg';
+import {handleAuthError} from '../TratativasErro/errorHandling'
+
 
 const LoginForm = () => {
+
+
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -25,14 +31,15 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError(null); // Limpa o erro anterior
     setLoading(true);
+
     try {
       const auth = getAuth();
       await signInWithEmailAndPassword(auth, email, password);
       navigate('/biblioteca');
     } catch (error) {
-      setError(handleAuthError(error));
+      handleAuthError(error, setError); // Chama a função externa
     } finally {
       setLoading(false);
     }
@@ -40,16 +47,6 @@ const LoginForm = () => {
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const handleAuthError = (error) => {
-    if (error.code === 'auth/user-not-found') {
-      return 'Usuário não encontrado.';
-    } else if (error.code === 'auth/wrong-password') {
-      return 'Senha incorreta.';
-    } else {
-      console.error('Firebase Error:', error);
-      return 'Erro de autenticação. Tente novamente mais tarde.';
-    }
-  };
 
   return (
     <Box
@@ -59,7 +56,9 @@ const LoginForm = () => {
         alignItems: 'center',
         height: '100vh',
         width: '100vw',
-        backgroundImage: 
+        backgroundImage: `url(${loginBackGroundImage})`, // Corrigido: usa url()
+        backgroundSize: 'cover', // Para cobrir toda a área
+        backgroundPosition: 'center', // Centraliza a imagem
       }}
     >
       <Box
@@ -70,39 +69,45 @@ const LoginForm = () => {
           width: { xs: '100%', sm: 'auto' },
           maxWidth: 400,
           p: 3,
-          boxShadow: 3,
+          backgroundColor: 'rgba(0, 0, 0, 0.9)', // Preto com 50% de opacidade
+          color: '#FFFFFF', // Texto branco para contraste
+           boxShadow: '0px 2px 4px rgba(255, 255, 255, 1)',  //Sombra branca, mais sutil, dependendo da imagem
           borderRadius: 1,
           maxHeight: '80vh', // Adiciona altura máxima para permitir scroll
           overflowY: 'auto', // Permite scroll vertical se necessário
         }}
       >
-        {error && <Alert severity="error">{error}</Alert>}
-        <form onSubmit={handleSubmit}>
+        {error && error}
+        <form  onSubmit={handleSubmit}>
           <Stack spacing={2}>
-            <TextField
+            <TextField 
               label="E-mail"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               fullWidth
-              autoComplete="username"
               margin="normal"
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
+              id="email-input"
+              autoComplete="off"
+             
+              sx={{
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'white', // ou qualquer cor que você desejar
                 },
               }}
             />
             <TextField
+            variant="outlined"
               label="Senha"
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               fullWidth
-              autoComplete="current-password"
               margin="normal"
+              id="senha-input"
+        autoComplete="off"
               slotProps={{
                 input: {
                   endAdornment: (
@@ -112,14 +117,17 @@ const LoginForm = () => {
                         onClick={handleClickShowPassword}
                         onMouseDown={(e) => e.preventDefault()}
                         edge="end"
+                          sx={{ color: 'white' }}
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
                   ),
                 },
-                inputLabel: {
-                  shrink: true,
+              }}
+              sx={{
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'white',
                 },
               }}
             />
@@ -136,7 +144,7 @@ const LoginForm = () => {
         </form>
         <Typography variant="body2" sx={{ mt: 2, textAlign: 'center' }}>
           Não tem uma conta?
-          <Link to="/registrar" underline="hover">
+          <Link to="/registrar" style={{ color: theme.palette.primary.main, textDecoration: 'underline' }}> 
             Criar uma conta
           </Link>
         </Typography>
