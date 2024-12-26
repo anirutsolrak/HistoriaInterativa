@@ -8,7 +8,19 @@ import { getAnalytics } from 'firebase/analytics';
 import 'dotenv/config';
 
 
+const firebaseConfig = {
+  apiKey: 'AIzaSyDcZSNVSYWuH4GOhqf9rrMSYiesL7-O4us',
+  authDomain: 'escolhafabula.firebaseapp.com',
+  projectId: 'escolhafabula',
+  storageBucket: 'escolhafabula.firebasestorage.app',
+  messagingSenderId: '435568697459',
+  appId: '1:435568697459:web:7427e675f72613a1a80a06',
+  measurementId: 'G-KNTZX4RJCC',
+};
 
+
+
+/*
 const firebaseConfig = {
   apiKey: Process.env.FIREBASE_API_KEY,
   authDomain: Process.env.FIREBASE_AUTH_DOMAIN,
@@ -17,7 +29,7 @@ const firebaseConfig = {
   messagingSenderId: Process.env.FIREBASE_MESSAGING_SENDER_ID,
   appId: Process.env.FIREBASE_APP_ID,
   measurementId: Process.env.FIREBASE_MEASUREMENT_ID,
-};
+}; */
 
 
 
