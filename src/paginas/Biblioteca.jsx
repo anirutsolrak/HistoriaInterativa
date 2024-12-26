@@ -22,9 +22,9 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebaseConfig';
 import { handleGenericError } from '../TratativasErro/errorHandling';
-import { historias } from '../historias';
+import { historias as historiasData } from '../historias';
 
-const HistoriaCardFront = ({ historia, handleCardClick, theme }) => {
+const HistoriaCardFront = ({ historia, handleCardClick, theme, randomImage }) => {
   return (
     <Card
       onClick={handleCardClick}
@@ -50,7 +50,7 @@ const HistoriaCardFront = ({ historia, handleCardClick, theme }) => {
       <CardMedia
         component="img"
         height="280"
-        image={historia.imagemCapa || 'https://source.unsplash.com/random/400x280/?fantasy,book'}
+        image={historia.imagemCapa || randomImage}
         alt={historia.titulo}
         sx={{
           objectFit: 'cover',
@@ -157,7 +157,7 @@ const HistoriaCardBack = ({ historia, progresso, navigate, handleCardClick, onAn
   );
 };
 
-const HistoriaCard = ({ historia, progresso, navigate, onAnimationStart, isAnimating }) => {
+const HistoriaCard = ({ historia, progresso, navigate, onAnimationStart, isAnimating, randomImage }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const theme = useTheme();
 
@@ -175,7 +175,7 @@ const HistoriaCard = ({ historia, progresso, navigate, onAnimationStart, isAnima
           flipSpeedFrontToBack={0.6}
           infinite={false}
         >
-          <HistoriaCardFront historia={historia} handleCardClick={handleCardClick} theme={theme} />
+          <HistoriaCardFront historia={historia} handleCardClick={handleCardClick} theme={theme} randomImage={randomImage} />
           <HistoriaCardBack
             historia={historia}
             progresso={progresso}
@@ -200,14 +200,29 @@ const Biblioteca = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [animatingId, setAnimatingId] = useState(null);
+  const [randomImages, setRandomImages] = useState([]); // Estado para um array de imagens aleatórias
   const containerRef = useRef(null);
 
   useEffect(() => {
     const fetchHistorias = async () => {
       try {
+        const unsplashApiKey = 'IhJ4WO75dP_m9gnENy5tjyi0PkaZ06ooo8ycy7W7CRM'; // Substitua pela sua chave de API
+        const numHistorias = historiasData.length; // Busca uma imagem para cada história
+
+        // Busca várias imagens aleatórias de uma vez
+        const response = await fetch(
+          `https://api.unsplash.com/photos/random?client_id=${unsplashApiKey}&count=${numHistorias}&query=fantasy`
+        );
+        if (!response.ok) {
+          throw new Error(`Erro ao buscar imagens aleatórias: ${response.status}`);
+        }
+        const data = await response.json();
+        const images = data.map((img) => img.urls.regular); // Extrai as URLs das imagens
+        setRandomImages(images);
+
         // Simula um tempo de carregamento para ver o Skeleton
         await new Promise((resolve) => setTimeout(resolve, 1500));
-        setHistoriasFiltradas(historias);
+        setHistoriasFiltradas(historiasData);
       } catch (error) {
         setError(handleGenericError(error, setError));
       } finally {
@@ -232,7 +247,7 @@ const Biblioteca = () => {
 
   useEffect(() => {
     const filtrarHistorias = () => {
-      const novasHistoriasFiltradas = historias.filter(
+      const novasHistoriasFiltradas = historiasData.filter(
         (historia) =>
           historia.titulo.toLowerCase().includes(textoBusca.toLowerCase()) ||
           historia.descricao.toLowerCase().includes(textoBusca.toLowerCase())
@@ -256,10 +271,10 @@ const Biblioteca = () => {
         transition: animatingId ? 'transform 1s ease-in-out' : 'none',
         transformOrigin: 'center',
         transform: animatingId ? 'scale(2) translateY(-20vh)' : 'scale(1)',
-        width: '94vw', // Ocupa toda a largura da viewport
+        width: '94vw',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center', // Centraliza o conteúdo horizontalmente
+        alignItems: 'center',
       }}
     >
       {loading ? (
@@ -268,10 +283,10 @@ const Biblioteca = () => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            width: '100%', // Garante que ocupe a largura do pai
-            maxWidth: 1400, // Mantém um limite máximo para telas maiores
-            mx: 'auto', // Centraliza dentro do pai (Box full-width)
-            pt: 4, // Adiciona um pouco de espaço no topo
+            width: '100%',
+            maxWidth: 1400,
+            mx: 'auto',
+            pt: 4,
           }}
         >
           <Box sx={{ mb: 4, width: '100%', maxWidth: 600 }}>
@@ -292,7 +307,7 @@ const Biblioteca = () => {
           <Box
             sx={{
               maxWidth: 1400,
-              width: '100%', // Garante que o conteúdo não seja mais largo que o container
+              width: '100%',
               mx: 'auto',
               transition: animatingId ? 'opacity 0.5s ease-in-out' : 'none',
               opacity: animatingId ? 0 : 1,
@@ -323,7 +338,7 @@ const Biblioteca = () => {
             </Box>
 
             <Grid container spacing={3}>
-              {historiasFiltradas.map((historia) => (
+              {historiasFiltradas.map((historia, index) => (
                 <HistoriaCard
                   key={historia.id}
                   historia={historia}
@@ -331,6 +346,7 @@ const Biblioteca = () => {
                   navigate={navigate}
                   onAnimationStart={() => setAnimatingId(historia.id)}
                   isAnimating={animatingId === historia.id}
+                  randomImage={randomImages[index]} // Passa a imagem correspondente
                 />
               ))}
             </Grid>
