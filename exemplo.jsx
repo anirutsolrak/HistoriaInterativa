@@ -1,5 +1,0 @@
-slotProps={{
-  inputLabel: {
-    shrink: true,
-  },
-}}

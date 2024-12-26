@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { theme } from '../TemaEstilizado';
+import { theme, loginBg } from '../TemaEstilizado';
 import {
   TextField,
   Button,
@@ -14,8 +14,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate, Link } from 'react-router-dom';
-import loginBackGroundImage from '../assets/loginBackGroundImage.jpg';
-import { handleAuthError } from '../TratativasErro/errorHandling';
+import {handleAuthError} from '../TratativasErro/errorHandling'
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -27,7 +26,7 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null); // Limpa o erro anterior
+    setError(null);
     setLoading(true);
 
     try {
@@ -35,7 +34,7 @@ const LoginForm = () => {
       await signInWithEmailAndPassword(auth, email, password);
       navigate('/biblioteca');
     } catch (error) {
-      handleAuthError(error, setError); // Chama a função externa
+      handleAuthError(error, setError);
     } finally {
       setLoading(false);
     }
@@ -49,11 +48,11 @@ const LoginForm = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '100vh',
-        minWidth: '100vw',
-        backgroundImage: `url(${loginBackGroundImage})`, // Corrigido: usa url()
-        backgroundSize: 'cover', // Para cobrir toda a área
-        backgroundPosition: 'center', // Centraliza a imagem
+        height: '100vh',
+        width: '100vw',
+        backgroundImage: `url(${loginBg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
       }}
     >
       <Box
@@ -64,18 +63,18 @@ const LoginForm = () => {
           width: { xs: '100%', sm: 'auto' },
           maxWidth: 400,
           p: 3,
-          backgroundColor: 'rgba(0, 0, 0, 0.9)', // Preto com 50% de opacidade
-          color: '#FFFFFF', // Texto branco para contraste
-          boxShadow: '0px 2px 4px rgba(255, 255, 255, 1)', //Sombra branca, mais sutil, dependendo da imagem
+          backgroundColor: 'rgba(0, 0, 0, 0.9)',
+          color: '#FFFFFF',
+          boxShadow: '0px 2px 4px rgba(255, 255, 255, 1)',
           borderRadius: 1,
-          maxHeight: '80vh', // Adiciona altura máxima para permitir scroll
-          overflowY: 'auto', // Permite scroll vertical se necessário
+          maxHeight: '80vh',
+          overflowY: 'auto',
         }}
       >
         {error && error}
         <form onSubmit={handleSubmit}>
           <Stack spacing={2}>
-            <TextField
+            <TextField 
               label="E-mail"
               type="email"
               value={email}
@@ -87,7 +86,7 @@ const LoginForm = () => {
               autoComplete="off"
               sx={{
                 '& .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'white', // ou qualquer cor que você desejar
+                  borderColor: 'white',
                 },
               }}
             />
@@ -102,22 +101,20 @@ const LoginForm = () => {
               margin="normal"
               id="senha-input"
               autoComplete="off"
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={(e) => e.preventDefault()}
-                        edge="end"
-                        sx={{ color: 'white' }}
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                },
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={(e) => e.preventDefault()}
+                      edge="end"
+                      sx={{ color: 'white' }}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
               }}
               sx={{
                 '& .MuiOutlinedInput-notchedOutline': {
@@ -138,13 +135,7 @@ const LoginForm = () => {
         </form>
         <Typography variant="body2" sx={{ mt: 2, textAlign: 'center' }}>
           Não tem uma conta?
-          <Link
-            to="/registrar"
-            style={{
-              color: theme.palette.primary.main,
-              textDecoration: 'underline',
-            }}
-          >
+          <Link to="/registrar" style={{ color: theme.palette.primary.main, textDecoration: 'underline' }}> 
             Criar uma conta
           </Link>
         </Typography>

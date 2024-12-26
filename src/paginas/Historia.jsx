@@ -1,39 +1,13 @@
-// Historia.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Typography, Button, LinearProgress, styled } from '@mui/material';
-import { historias } from '../historias.js';
+import { Box } from '@mui/material';
 import { auth } from '../firebaseConfig';
-import { theme } from '../TemaEstilizado';
+import { historias } from '../historias.js';
 import { handleGenericError } from '../TratativasErro/errorHandling';
-
-const Container = styled(Box)({
-  padding: theme.spacing(4),
-  maxWidth: 600,
-  margin: '0 auto',
-  backgroundColor: theme.palette.background.paper,
-  color: theme.palette.text.primary,
-});
-
-const StoryContent = styled(Box)({
-  marginBottom: theme.spacing(2),
-});
-
-const ChoiceButton = styled(Button)({
-  marginTop: theme.spacing(1),
-  marginBottom: theme.spacing(1),
-  width: '100%',
-  borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[2],
-  color: theme.palette.primary.contrastText,
-  backgroundColor: theme.palette.secondary.main,
-});
-
-const ProgressIndicator = styled(Box)({
-  display: 'flex',
-  justifyContent: 'center',
-  marginBottom: theme.spacing(2),
-});
+import StoryContainer from '../componentes/StoryNavigation/StoryContainer';
+import StoryContent from '../componentes/StoryNavigation/StoryContent';
+import StoryChoices from '../componentes/StoryNavigation/StoryChoices';
+import StoryProgress from '../componentes/StoryNavigation/StoryProgress';
 
 const Historia = () => {
   const { id } = useParams();
@@ -41,7 +15,8 @@ const Historia = () => {
   const [historia, setHistoria] = useState(null);
   const [nodoAtual, setNodoAtual] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); // Estado para mensagens de erro
+  const [error, setError] = useState(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     const carregarHistoria = async () => {
@@ -74,20 +49,28 @@ const Historia = () => {
     return () => unsubscribeAuth();
   }, [id, navigate]);
 
-  const handleEscolha = (proximoNodoId) => {
+  const handleEscolha = async (proximoNodoId) => {
     try {
+      setIsTransitioning(true);
       if (!historia || !historia.nodes)
         throw new Error('História não carregada');
+
       const proximoNodo = historia.nodes.find(
         (node) => node.id === proximoNodoId
       );
       if (!proximoNodo) {
         throw new Error(`Próximo nó não encontrado: ${proximoNodoId}`);
       }
+
+      // Pequeno delay para a animação
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
       setNodoAtual(proximoNodo);
       salvarProgresso(id, historia.progresso + 1, proximoNodoId);
     } catch (error) {
       setError(handleGenericError(error, setError));
+    } finally {
+      setIsTransitioning(false);
     }
   };
 
@@ -108,7 +91,6 @@ const Historia = () => {
         localStorage.setItem('historias', JSON.stringify(historiasAtualizadas));
         setHistoria(historiasAtualizadas[historiaIndex]);
       } else {
-        // Adiciona a história ao localStorage se não existir
         const novaHistoria = {
           ...historias.find((h) => h.id === id),
           progresso: novoProgresso,
@@ -118,17 +100,10 @@ const Historia = () => {
         localStorage.setItem('historias', JSON.stringify(historiasAtualizadas));
         setHistoria(novaHistoria);
       }
-    } else {
-      console.error(
-        'História não carregada para salvar o progresso',
-        historiaId
-      );
     }
   };
 
-  if (loading) {
-    return <LinearProgress />;
-  }
+  if (loading || !nodoAtual) return null;
 
   const progresso = historia
     ? nodoAtual
@@ -136,33 +111,21 @@ const Historia = () => {
       : 0
     : 0;
   const totalNos = historia ? historia.nodes.length : 0;
-  const progressoPercentual = (progresso / totalNos) * 100;
 
   return (
-    <Container>
-      {error && error} {/* Exibe a mensagem de erro */}
-      <ProgressIndicator>
-        <Typography variant="h6" component="span" sx={{ mr: 1 }}>
-          {progresso} de {totalNos}
-        </Typography>
-        <LinearProgress variant="determinate" value={progressoPercentual} />
-      </ProgressIndicator>
-      <StoryContent>
-        <Typography variant="h5" component="h2" gutterBottom>
-          {nodoAtual?.texto || 'Nenhum texto encontrado'}
-        </Typography>
-        {nodoAtual?.escolhas &&
-          nodoAtual.escolhas.map((escolha, index) => (
-            <ChoiceButton
-              key={index}
-              variant="contained"
-              onClick={() => handleEscolha(escolha.proximoNodo)}
-            >
-              {escolha.texto}
-            </ChoiceButton>
-          ))}
-      </StoryContent>
-    </Container>
+    <StoryContainer>
+      <StoryProgress current={progresso} total={totalNos} />
+      {error}
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <StoryContent text={nodoAtual.texto} />
+        {!isTransitioning && nodoAtual.escolhas && (
+          <StoryChoices
+            choices={nodoAtual.escolhas}
+            onChoiceSelect={handleEscolha}
+          />
+        )}
+      </Box>
+    </StoryContainer>
   );
 };
 
