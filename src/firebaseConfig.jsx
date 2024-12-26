@@ -5,7 +5,10 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { getAnalytics } from 'firebase/analytics';
-import 'dotenv/config'; // Importe o dotenv
+import 'dotenv/config';
+
+
+
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -17,10 +20,12 @@ const firebaseConfig = {
   measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
+
 // Verifica se todas as variáveis de ambiente estão definidas
 if (Object.values(firebaseConfig).some(val => val === undefined)) {
   throw new Error("Variáveis de ambiente do Firebase não configuradas corretamente.");
 }
+
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
