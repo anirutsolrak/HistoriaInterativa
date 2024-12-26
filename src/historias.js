@@ -240,7 +240,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '20mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -360,7 +360,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '19mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -480,7 +480,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '18mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -600,7 +600,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '17mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -720,7 +720,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '16mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -840,7 +840,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '15mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -960,7 +960,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '14mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -1080,7 +1080,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '13mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -1200,7 +1200,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '12mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -1320,7 +1320,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '11mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -1440,7 +1440,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '10mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -1560,7 +1560,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '09mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -1680,7 +1680,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '08mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -1800,7 +1800,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '07mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -1920,7 +1920,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '06mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -2040,7 +2040,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '05mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -2160,7 +2160,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '04mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -2280,7 +2280,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '03mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -2400,7 +2400,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica-academia',
+    id: '02mistica-academia',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',
@@ -2520,7 +2520,7 @@ export const historias = [
     ],
   },
   {
-    id: 'mistica',
+    id: '01mistica',
     titulo: 'As Provas da Academia Mística',
     descricao:
       'Entre na lendária Academia Arcanus e enfrente as Provas de Ascensão!',

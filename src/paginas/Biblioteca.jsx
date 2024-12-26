@@ -14,6 +14,7 @@ import {
   Fade,
   useTheme,
   alpha,
+  Skeleton,
 } from '@mui/material';
 import { SearchIcon } from '../TemaEstilizado';
 import CardFlip from 'react-card-flip';
@@ -204,7 +205,8 @@ const Biblioteca = () => {
   useEffect(() => {
     const fetchHistorias = async () => {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        // Simula um tempo de carregamento para ver o Skeleton
+        await new Promise((resolve) => setTimeout(resolve, 1500));
         setHistoriasFiltradas(historias);
       } catch (error) {
         setError(handleGenericError(error, setError));
@@ -254,55 +256,87 @@ const Biblioteca = () => {
         transition: animatingId ? 'transform 1s ease-in-out' : 'none',
         transformOrigin: 'center',
         transform: animatingId ? 'scale(2) translateY(-20vh)' : 'scale(1)',
+        width: '94vw', // Ocupa toda a largura da viewport
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center', // Centraliza o conteúdo horizontalmente
       }}
     >
-      <Fade in={!loading}>
+      {loading ? (
         <Box
           sx={{
-            maxWidth: 1400,
-            mx: 'auto',
-            transition: animatingId ? 'opacity 0.5s ease-in-out' : 'none',
-            opacity: animatingId ? 0 : 1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            width: '100%', // Garante que ocupe a largura do pai
+            maxWidth: 1400, // Mantém um limite máximo para telas maiores
+            mx: 'auto', // Centraliza dentro do pai (Box full-width)
+            pt: 4, // Adiciona um pouco de espaço no topo
           }}
         >
-          {error}
-          <Box sx={{ mb: 4, maxWidth: 600, mx: 'auto' }}>
-            <TextField
-              fullWidth
-              placeholder="Buscar histórias..."
-              value={textoBusca}
-              onChange={(e) => setTextoBusca(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon sx={{ color: 'text.secondary' }} />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '50px',
-                  backgroundColor: alpha(theme.palette.background.paper, 0.8),
-                  backdropFilter: 'blur(10px)',
-                },
-              }}
-            />
+          <Box sx={{ mb: 4, width: '100%', maxWidth: 600 }}>
+            <Skeleton variant="rectangular" width="100%" height={56} sx={{ borderRadius: '50px' }} />
           </Box>
-
           <Grid container spacing={3}>
-            {historiasFiltradas.map((historia) => (
-              <HistoriaCard
-                key={historia.id}
-                historia={historia}
-                progresso={progresso}
-                navigate={navigate}
-                onAnimationStart={() => setAnimatingId(historia.id)}
-                isAnimating={animatingId === historia.id}
-              />
+            {[0, 1, 2, 3, 4, 5, 6, 7].map((index) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                <Skeleton variant="rectangular" width="100%" height={400} sx={{ borderRadius: '16px', mb: 1 }} />
+                <Skeleton width="70%" />
+                <Skeleton width="40%" />
+              </Grid>
             ))}
           </Grid>
         </Box>
-      </Fade>
+      ) : (
+        <Fade in={!loading}>
+          <Box
+            sx={{
+              maxWidth: 1400,
+              width: '100%', // Garante que o conteúdo não seja mais largo que o container
+              mx: 'auto',
+              transition: animatingId ? 'opacity 0.5s ease-in-out' : 'none',
+              opacity: animatingId ? 0 : 1,
+            }}
+          >
+            {error}
+            <Box sx={{ mb: 4, maxWidth: 600, mx: 'auto', width: '100%' }}>
+              <TextField
+                fullWidth
+                placeholder="Buscar histórias..."
+                value={textoBusca}
+                onChange={(e) => setTextoBusca(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon sx={{ color: 'text.secondary' }} />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '50px',
+                    backgroundColor: alpha(theme.palette.background.paper, 0.8),
+                    backdropFilter: 'blur(10px)',
+                  },
+                }}
+              />
+            </Box>
+
+            <Grid container spacing={3}>
+              {historiasFiltradas.map((historia) => (
+                <HistoriaCard
+                  key={historia.id}
+                  historia={historia}
+                  progresso={progresso}
+                  navigate={navigate}
+                  onAnimationStart={() => setAnimatingId(historia.id)}
+                  isAnimating={animatingId === historia.id}
+                />
+              ))}
+            </Grid>
+          </Box>
+        </Fade>
+      )}
     </Box>
   );
 };
