@@ -5,7 +5,7 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { getAnalytics } from 'firebase/analytics';
-import 'dotenv/config';
+
 
 
 const firebaseConfig = {
